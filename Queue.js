@@ -1,27 +1,36 @@
-class Queue {
+let queue = (() => {
+    let weakMap = new WeakMap();
+    let count = 0;
+    let keys = [];
 
-    add(value) {
-        if(!this.value) {
-            this.value = value;
-            this.next = {value: {}, next: {}};
-        } else {
-            if(!this.temp) {
-                this.next = {
-                    value: value,
-                    next: {value: {}, next: {}}
-                };
-                this.temp = this.next.next;
-            } else {
-                this.temp.value = value;
-                this.temp.next = {};
-                this.temp = this.temp.next;
-            }
+    class Queue {
+
+        enqueue(value) {
+            keys.push({value: count});
+            weakMap.set(keys[count], value);
+            count++;
         }
-    }
 
-    remove() {
-        this.value = this.next.value;
-        this.next = this.next.next;
-    }
+        dequeue() {
+            weakMap.delete(keys[0]);
+            keys.shift();
+            count--;
+        }
 
-}
+        count() {
+            return count;
+        }
+
+        clear() {
+            weakMap = new WeakMap();
+            count = 0;
+        }
+        peek() {
+            return weakMap.get(keys[0]);
+        }
+
+    }
+    return new Queue();
+})();
+
+
